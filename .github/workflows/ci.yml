@@ -32,7 +32,6 @@ jobs:
       - name: Run Linter (Flake8)
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
 
@@ -43,15 +42,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
       - name: Verify Docker Compose Configuration
         run: |
           docker compose config
 
 
-      - name: Build Notifications Service Docker Image
+      - name: Simulate Infrastructure Deployment
         run: |
-          docker build -t notifications-svc-s05:latest ./notifications_svc
+          docker compose up -d
+          echo "Контейнеры успешно развернуты в изолированном окружении пайплайна!"
 
       - name: Set up Kubectl
         uses: azure/setup-kubectl@v3
@@ -61,4 +60,4 @@ jobs:
       - name: Validate Kubernetes Manifests (CD Dry-Run)
         run: |
           kubectl apply --filename=k8s/deployment.yaml --dry-run=client
-          echo "=== ПРОЦЕСС CD УСПЕШЕН: Манифесты валидны и готовы к раскатке на кластер! ==="
+          echo "=== ПРОЦЕСС CD УСПЕШЕН: Манифесты валидны и готовы к деплою! ==="
