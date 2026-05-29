@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifications-app
+  labels:
+    app: notifications-app
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: notifications-app
+  template:
+    metadata:
+      labels:
+        app: notifications-app
+    spec:
+      containers:
+        - name: notifications-container
+          image: fel0ne/notifications-svc-s05:latest 
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8151 
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notifications-svc-s05
+spec:
+  selector:
+    app: notifications-app
+  ports:
+    - protocol: TCP
+      port: 8151
+      targetPort: 8151
+  type: ClusterIP
