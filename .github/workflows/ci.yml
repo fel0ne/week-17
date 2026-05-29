@@ -59,5 +59,6 @@ jobs:
 
       - name: Validate Kubernetes Manifests (CD Dry-Run)
         run: |
-          kubectl apply --filename=k8s/deployment.yaml --dry-run=client
+
+          kubectl create --filename=k8s/deployment.yaml --dry-run=client
           echo "=== ПРОЦЕСС CD УСПЕШЕН: Манифесты валидны и готовы к деплою! ==="
